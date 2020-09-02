@@ -1,0 +1,47 @@
+%Loading the Dataset:
+cd 'D:\'
+df = load('Linear_Regression.csv');
+df(1:5,1:2)
+
+x = df(:,1); % Feature (Independent variable)
+y = df(:,2); % Dependent variables 
+length(x)
+scatter(x,y,12,'filled','blue')
+
+% There are some Outliers at the end of the regression line.
+x = x(1:298,1);
+y = y(1:298,1);
+scatter(x,y,'*','blue') 
+
+% Including the Parameter X0:
+temp = ones(298,1);
+x = [temp x]
+%Train-test Split:
+x_train = x(1:250,:);
+x_test = x(250:298,:);
+y_train = y(1:250,1);
+y_test = y(250:298,1);
+
+% Normal Equation:
+p = (x_train' * x_train) \ x_train' *y_train      % inv(A)*b == A\b.
+%Prediction:
+y_pred = x_test * p
+% Metrics or Parameter testing:
+% Mean Squared Error(MSE):
+t = y_test - y_pred;
+t = t .^2;
+MSE = sum(t)/length(t);
+
+% R_square value: 
+y_m = mean(y_test);
+y_m1 = ones(49,1)*y_m;
+r1 = (y_test - y_m);
+r1= r1.^2;
+r2 = (y_test - y_pred);
+r2=r2.^2;
+r2_acc = 1- sum(r2)/sum(r1);
+fprintf('Mean Square Error(MSE): %.2f\nR_square value is: %.4f %%',MSE,r2_acc*100.0)
+
+%Matrix Dimension should be same:
+x = x(:,2);
+plotregression(x,y)
